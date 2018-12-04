@@ -23,11 +23,25 @@ def find_overlaps(marked_fabric):
                 counter += 1
     return counter
 
+def find_non_overlap(claims_list, marked_fabric):
+    for claim in get_slice(claims_list):
+        overlaps = False
+        for i in range(int(claim[1]), int(claim[1])+int(claim[3])):
+            for j in range(int(claim[2]), int(claim[2])+int(claim[4])):
+                if marked_fabric[i][j] != 1:
+                    overlaps = True
+                    break
+        if not overlaps:
+            return int(claim[0])
+
 def main(claims_list):
     fabric = numpy.zeros((1000,1000))
     marked_fabric = allocate_claims(claims_list, fabric)
     overlapping = find_overlaps(marked_fabric)
     print("Number of overlapping square inches: ", overlapping)
+
+    in_tact = find_non_overlap(claims_list, marked_fabric)
+    print("Non-overlapping claim ID: ", in_tact)
 
 if __name__ == '__main__':
     input_file = "input.txt"
