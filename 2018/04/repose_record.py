@@ -37,18 +37,28 @@ def create_grid(guard_activity):
                 gdf.at[(current_date, current_guard), i] += 1
     return gdf
 
-def strategy1(guard_activity):
-    gdf = create_grid(guard_activity)
+def strategy1(gdf):
     sleepiest_guard = gdf.sum(axis=1).groupby(by=['guard']).sum().idxmax()
     gdf_sum = gdf.groupby(by=['guard']).sum()
     sleepy_minute = int(gdf_sum.loc[sleepiest_guard].idxmax())
     return sleepiest_guard, sleepy_minute, sleepiest_guard * sleepy_minute
 
+def strategy2(gdf):
+    gdf_sum = gdf.groupby(by=['guard']).sum()
+    likely_guard = gdf_sum.max(axis=0).idxmax()
+    likely_minute = gdf_sum.max(axis=1).idxmax()
+    return likely_guard, likely_minute, likely_guard * likely_minute
+
 def main(guard_activity_input):
     guard_activity = parse_guard_activity(guard_activity_input)
-    sleepiest_guard, sleepy_minute, s1 = strategy1(guard_activity)
+    gdf = create_grid(guard_activity)
+    sleepiest_guard, sleepy_minute, s1 = strategy1(gdf)
     print('Strategy 1 Sleepiest Guard: ', sleepiest_guard, 'Sleepy Minute: ', sleepy_minute)
     print('Strategy 1 calculation: ', s1)
+
+    likely_guard, likely_minute, s2 = strategy2(gdf)
+    print('Strategy 2 Sleepy Guard: ', likely_guard, 'Sleepy Minute: ', likely_minute)
+    print('Strategy 2 calculation: ', s2)
 
 if __name__ == '__main__':
     guard_activity = "input_test.txt"
