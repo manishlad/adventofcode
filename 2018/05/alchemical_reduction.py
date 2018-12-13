@@ -9,8 +9,7 @@ def get_polymer_unit(input_polymer):
             else:
                 return
 
-def main(input_polymer):
-    polymer = get_polymer_unit(input_polymer)
+def collapse_polymer(polymer):
     reduced = []
     for unit in polymer:
         if reduced:
@@ -24,6 +23,11 @@ def main(input_polymer):
                     continue
         reduced.append(unit)
     rp = ''.join(reduced).strip()
+    return rp
+
+def main(input_polymer):
+    polymer = get_polymer_unit(input_polymer)
+    rp = collapse_polymer(polymer)
     print('Reduced polymer length: ', len(rp))
 
 if __name__ == '__main__':
