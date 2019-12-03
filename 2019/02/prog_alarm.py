@@ -34,12 +34,26 @@ def part_one(ga_prog):
     ga_prog[1] = 12
     ga_prog[2] = 2
     output = run_prog(ga_prog)
-    print(output)
+    print(output[0])
+
+def part_two(ga_prog):
+    for i in range(100):
+        for j in range(100):
+            gp = ga_prog.copy()
+            gp[1] = i
+            gp[2] = j
+            output = run_prog(gp)
+            if output[0] == 19690720:
+                print("Noun:", i, "Verb:", j)
+                print("100 * Noun + Verb =", 100 * i + j)
+                return
+
 
 
 def main(input_file):
     ga_prog = read_prog(input_file)
     part_one(ga_prog)
+    part_two(ga_prog)
 
 
 if __name__ == '__main__':
