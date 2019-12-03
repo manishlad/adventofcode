@@ -2,26 +2,33 @@
 
 import sys
 
-def read_prog(input):
-    with open(input, 'r') as f:
+def read_prog(input_file):
+    with open(input_file, 'r') as f:
         intcode = f.read().split(",")
         intcode = list(map(int, intcode))
     return intcode
 
 def run_prog(intcode):
-    ptr = 0
-    while(ptr < len(intcode)):
-        if intcode[ptr] == 99:
+    mem = intcode.copy()
+    i_ptr = 0
+    i_incr = 4
+    while(i_ptr < len(mem)-i_incr):
+        opcode = mem[i_ptr]
+        param1 = mem[i_ptr + 1]
+        param2 = mem[i_ptr + 2]
+        param3 = mem[i_ptr + 3]
+        if opcode == 99:
             break
-        elif intcode[ptr] == 1:
-            intcode[intcode[ptr+3]] = intcode[intcode[ptr+1]] + intcode[intcode[ptr+2]]
-        elif intcode[ptr] == 2:
-            intcode[intcode[ptr+3]] = intcode[intcode[ptr+1]] * intcode[intcode[ptr+2]]
+        elif opcode == 1:
+            mem[param3] = mem[param1] + mem[param2]
+        elif opcode == 2:
+            mem[param3] = mem[param1] * mem[param2]
         else:
-            print("ERROR")
+            print("ERROR: Unknown Opcode at address:", i_ptr)
             sys.exit(1)
-        ptr+=4
-    return intcode
+        i_ptr += i_incr
+    return mem
+
 
 def part_one(ga_prog):
     ga_prog[1] = 12
@@ -30,8 +37,8 @@ def part_one(ga_prog):
     print(output)
 
 
-def main(input):
-    ga_prog = read_prog(input)
+def main(input_file):
+    ga_prog = read_prog(input_file)
     part_one(ga_prog)
 
 
