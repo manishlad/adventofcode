@@ -27,46 +27,55 @@ def get_adjacent_coord(direction, prev_coord):
 def trace_wire_path(wire):
     c_ptr = (0,0)
     coords = []
+    stepdict = {}
+    steps = 0
     for segment in wire:
         path_segment = read_path_segment(segment)
         for i in range(int(path_segment[1])):
             adjacent = get_adjacent_coord(path_segment[0], c_ptr)
             coords.append(adjacent)
             c_ptr = adjacent
-    return coords
+            steps += 1
+            stepdict[c_ptr] = steps
+    return coords, stepdict
 
 def get_manhattan_distance(crossings):
     centre = (0,0)
     d = {(abs(centre[0] - c[0]) + abs(centre[1] - c[1])):c for c in crossings}
     k = list(d.keys())
     k.sort()
-    return k[0]
+    return k[0], d[k[0]]
 
 def test1():
-    path1 = trace_wire_path(["R75","D30","R83","U83","L12","D49","R71","U7","L72"])
-    path2 = trace_wire_path(["U62","R66","U55","R34","D71","R55","D58","R83"])
-    #crossings = list(set(path1) & set(path2))
+    path1,steps1 = trace_wire_path(["R75","D30","R83","U83","L12","D49","R71","U7","L72"])
+    path2,steps2 = trace_wire_path(["U62","R66","U55","R34","D71","R55","D58","R83"])
     crossings = list(set(path1).intersection(path2))
-    md = get_manhattan_distances(crossings)
+    md, c = get_manhattan_distance(crossings)
     print(md)
+    steps = [steps1[i]+steps2[i] for i in crossings]
+    print(min(steps))
 
 def test2():
-    path1 = trace_wire_path(["R98","U47","R26","D63","R33","U87","L62","D20","R33","U53","R51"])
-    path2 = trace_wire_path(["U98","R91","D20","R16","D67","R40","U7","R15","U6","R7"])
+    path1,steps1 = trace_wire_path(["R98","U47","R26","D63","R33","U87","L62","D20","R33","U53","R51"])
+    path2,steps2 = trace_wire_path(["U98","R91","D20","R16","D67","R40","U7","R15","U6","R7"])
     crossings = list(set(path1).intersection(set(path2)))
-    md = get_manhattan_distances(crossings)
+    md, c = get_manhattan_distance(crossings)
     print(md)
+    steps = [steps1[i]+steps2[i] for i in crossings]
+    print(min(steps))
 
 def main(input_file):
     wire1, wire2 = read_wire_path(input_file)
-    path1 = trace_wire_path(wire1)
-    path2 = trace_wire_path(wire2)
+    path1,steps1 = trace_wire_path(wire1)
+    path2,steps2 = trace_wire_path(wire2)
     crossings = list(set(path1).intersection(set(path2)))
-    md = get_manhattan_distance(crossings)
+    md, c = get_manhattan_distance(crossings)
     print(md)
+    steps = [steps1[i]+steps2[i] for i in crossings]
+    print(min(steps))
 
 if __name__ == '__main__':
     input_file = "input.dat"
     main(input_file)
-    #test1()
-    #test2()
+    test1()
+    test2()
