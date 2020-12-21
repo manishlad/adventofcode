@@ -10,6 +10,9 @@ def main(expense_report_file):
     for pair in combinations(entries, 2):
         if sum(pair) == 2020:
             print(prod(pair))
+    for triple in combinations(entries, 3):
+        if sum(triple) == 2020:
+            print(prod(triple))
 
 
 if __name__ == '__main__':
