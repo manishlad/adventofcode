@@ -24,6 +24,13 @@ def find_col(seat):
     return c
 
 
+def missing_seat(seat_list):
+    seat_list.sort()
+    for i in range(1, len(seat_list)-1):
+        if seat_list[i-1] == seat_list[i] - 2:
+            return seat_list[i] - 1
+
+
 def main(input_file):
     seat_list = []
     with open(input_file, 'r') as seats:
@@ -32,6 +39,8 @@ def main(input_file):
             col = find_col(seat[7:])
             seat_list.append(row[0]*8 + col[0])
     print('Sanity check - highest seat ID =', max(seat_list))
+    print('My seat is:', missing_seat(seat_list))
+
 
 if __name__ == '__main__':
     input_file = 'input.dat'
