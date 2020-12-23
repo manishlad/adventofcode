@@ -3,18 +3,22 @@
 
 def main(input_file):
     groups = []
-    answers = ''
+    groups2 = []
+    answers = []
     with open(input_file, 'r') as f:
         for line in f:
             if line.strip():
-                answers = answers + line.strip()
+                answers.append(set(line.strip()))
             else:
-                groups.append(set(answers))
-                answers = ''
-        groups.append(set(answers))  # remember to add the last entry
+                groups.append(set.union(*answers))
+                groups2.append(set.intersection(*answers))
+                answers = []
+        groups.append(set.union(*answers))  # remember to add the last entries
+        groups2.append(set.intersection(*answers))
     num_yes_per_group = [len(y) for y in groups]
-    print(num_yes_per_group)
-    print('Sum of yes counts =', sum(num_yes_per_group))
+    num_yes_per_group2 = [len(y) for y in groups2]
+    print('Sum of union yes counts =', sum(num_yes_per_group))
+    print('Sum of intersection yes counts =', sum(num_yes_per_group2))
 
 
 if __name__ == '__main__':
