@@ -30,6 +30,18 @@ def traverse_subtree(ruleset, root, target):
         return True in results
 
 
+def count_subtree(ruleset, root):
+    if 'no other' in ruleset[root]:
+        return 0
+    children = [
+        (int(list(r)[:1][0]), ''.join(list(r)[1:]).strip())
+        for r in ruleset[root]]
+    bag_count = 0
+    for c in children:
+        bag_count = bag_count + c[0] + c[0] * count_subtree(ruleset, c[1])
+    return bag_count
+
+
 def main(rules_file):
     rules = read_rules(rules_file)
     options = []
@@ -38,6 +50,9 @@ def main(rules_file):
             options.append(k)
 
     print(len(options))
+
+    total = count_subtree(rules, 'shiny gold')
+    print(total)
 
 
 if __name__ == '__main__':
