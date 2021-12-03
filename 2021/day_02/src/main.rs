@@ -5,10 +5,15 @@ fn main() {
     let cmd_list = get_cmd_list(course);
 
     let mut position = (0,0); // h_pos, depth
-
     navigate(&mut position, cmd_list);
-
     println!("Position = {:?}\nMultiplier = {}", position, position.0 * position.1);
+
+    let course2 = get_input();
+    let cmd_list2 = get_cmd_list(course2);
+    let mut position2 = (0,0,0); // h_pos, depth, aim
+    navigate2(&mut position2, cmd_list2);
+    println!("Position = {:?}\nMultiplier = {}", position2, position2.0 * position2.1);
+
 }
 
 fn navigate(pos: &mut (i32, i32), cmd_list: Vec<(String, i32)>) {
@@ -17,6 +22,17 @@ fn navigate(pos: &mut (i32, i32), cmd_list: Vec<(String, i32)>) {
             "forward" => pos.0 += cmd.1,
             "down" => pos.1 += cmd.1,
             "up" => pos.1 -= cmd.1,
+            &_ => print!("error"),
+          }
+    }
+}
+
+fn navigate2(pos: &mut (i32, i32, i32), cmd_list: Vec<(String, i32)>) {
+    for cmd in cmd_list.iter() {
+        match cmd.0.as_str() {
+            "forward" => {pos.0 += cmd.1; pos.1 += pos.2 * cmd.1;},
+            "down" => pos.2 += cmd.1,
+            "up" => pos.2 -= cmd.1,
             &_ => print!("error"),
           }
     }
