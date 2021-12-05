@@ -1,13 +1,13 @@
 fn main() {
     println!("Advent of Code - Day 3!\n");
 
-    let mut test_input_dat = get_test_input();
-    test_input_dat = transpose(&test_input_dat);
-    gamma_epsilon(&test_input_dat, "Test");
+    let test_input_dat = get_test_input();
+    let transposed_test_input_dat = transpose(&test_input_dat);
+    gamma_epsilon(&transposed_test_input_dat, "Test");
 
-    let mut input_dat = get_input();
-    input_dat = transpose(&input_dat);
-    gamma_epsilon(&input_dat, "Actual");
+    let input_dat = get_input();
+    let transposed_input_dat = transpose(&input_dat);
+    gamma_epsilon(&transposed_input_dat, "Actual");
 }
 
 fn gamma_epsilon(diagnostics: &Vec<Vec<u8>>, label: &str) {
