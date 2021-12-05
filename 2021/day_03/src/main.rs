@@ -1,13 +1,91 @@
+#![feature(drain_filter)]
+
 fn main() {
     println!("Advent of Code - Day 3!\n");
 
     let test_input_dat = get_test_input();
     let transposed_test_input_dat = transpose(&test_input_dat);
     gamma_epsilon(&transposed_test_input_dat, "Test");
+    o2gr_co2sr(&test_input_dat, &transposed_test_input_dat, "Test");
 
     let input_dat = get_input();
     let transposed_input_dat = transpose(&input_dat);
     gamma_epsilon(&transposed_input_dat, "Actual");
+    o2gr_co2sr(&input_dat, &transposed_input_dat, "Actual");
+}
+
+fn o2gr_co2sr(diagnostics: &Vec<Vec<u8>>, transposed_diagnostics: &Vec<Vec<u8>>, label: &str) {
+    let mut o2gr_diagnostics = diagnostics.clone();
+    let mut co2sr_diagnostics = diagnostics.clone();
+    let mut o2gr: usize = 0;
+    let mut co2sr: usize = 0;
+
+    // let (mut _o2gr, mut _co2sr) = bit_counts(&transposed_diagnostics);
+
+    // for b in 0.._o2gr.len() {
+    for b in 0..diagnostics[0].len() {
+        let (mut _o2gr, mut _co2sr) = bit_counts(&transpose(&o2gr_diagnostics));
+
+        if _o2gr[b] == 2 {
+            // println!("Changing 2 to 1 {}, {:?}", _o2gr[b], _o2gr);
+            _o2gr[b] = 1;
+        }
+        o2gr_diagnostics = o2gr_diagnostics
+            .drain_filter(|x| x[b] == _o2gr[b])
+            .collect::<Vec<_>>();
+        if o2gr_diagnostics.len() == 1 {
+            // println!("_o2gr {:?}\n", o2gr_diagnostics);
+            o2gr = usize::from_str_radix(
+                o2gr_diagnostics[0].clone()
+                    .into_iter()
+                    .map(|b| b.to_string())
+                    .collect::<String>()
+                    .as_str(),
+                2,
+            )
+            .unwrap();
+            // println!("o2gr = {}", o2gr);
+            break;
+        }
+        // println!("_o2gr {:?}\n", o2gr_diagnostics);
+    }
+
+    for b in 0..diagnostics[0].len() {
+        let (mut _o2gr, mut _co2sr) = bit_counts(&transpose(&co2sr_diagnostics));
+
+        if _co2sr[b] == 2 {
+            // println!("Changing 2 to 1 {}, {:?}", _co2sr[b], _co2sr);
+            _co2sr[b] = 0;
+            // println!("Changed 2 to 1 {}, {:?}", _co2sr[b], _co2sr);
+        }
+        co2sr_diagnostics = co2sr_diagnostics
+            .drain_filter(|x| x[b] == _co2sr[b])
+            .collect::<Vec<_>>();
+        if co2sr_diagnostics.len() == 1 {
+            // println!("_co2sr {:?}\n", co2sr_diagnostics);
+            co2sr = usize::from_str_radix(
+                co2sr_diagnostics[0].clone()
+                    .into_iter()
+                    .map(|b| b.to_string())
+                    .collect::<String>()
+                    .as_str(),
+                2,
+            )
+            .unwrap();
+
+            break;
+        }
+        // println!("_co2sr {:?}\n", co2sr_diagnostics);
+    }
+
+    let life_support_rating_consumption = o2gr * co2sr;
+
+    // println!("\n\n");
+    // println!("{:?}\n{:?}", o2gr_diagnostics, co2sr_diagnostics);
+    println!(
+        "Part 2 - {}:\n  oxygen generator rating = {}\n  CO2 scrubber rating = {}\n  life support rating consumption = {}\n\n",
+        label, o2gr, co2sr, life_support_rating_consumption
+    );
 }
 
 fn gamma_epsilon(diagnostics: &Vec<Vec<u8>>, label: &str) {
