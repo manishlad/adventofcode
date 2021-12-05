@@ -13,6 +13,11 @@ fn main() {
 fn gamma_epsilon(diagnostics: &Vec<Vec<u8>>, label: &str) {
     let (_gamma, _epsilon) = bit_counts(&diagnostics);
 
+    if _gamma.contains(&2) || _epsilon.contains(&2) {
+        println!("ERROR: Could not get gamma epsilon values");
+        return;
+    }
+
     let gamma = usize::from_str_radix(
         _gamma
             .into_iter()
@@ -54,8 +59,8 @@ fn transpose(input_dat: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
 }
 
 fn bit_counts(input: &Vec<Vec<u8>>) -> (Vec<u8>, Vec<u8>) {
-    let mut gamma: Vec<u8> = Vec::new();
-    let mut epsilon: Vec<u8> = Vec::new();
+    let mut most_commons: Vec<u8> = Vec::new();
+    let mut least_commons: Vec<u8> = Vec::new();
     for i in 0..input.len() {
         let mut count_0: u16 = 0;
         let mut count_1: u16 = 0;
@@ -67,17 +72,17 @@ fn bit_counts(input: &Vec<Vec<u8>>) -> (Vec<u8>, Vec<u8>) {
             }
         }
         if count_0 > count_1 {
-            gamma.push(0);
-            epsilon.push(1);
+            most_commons.push(0);
+            least_commons.push(1);
         } else if count_0 < count_1 {
-            gamma.push(1);
-            epsilon.push(0);
+            most_commons.push(1);
+            least_commons.push(0);
         } else {
-            gamma.push(2);
-            epsilon.push(2);
+            most_commons.push(2);
+            least_commons.push(2);
         }
     }
-    (gamma, epsilon)
+    (most_commons, least_commons)
 }
 
 fn get_test_input() -> Vec<Vec<u8>> {
