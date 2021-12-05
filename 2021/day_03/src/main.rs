@@ -3,14 +3,14 @@ fn main() {
 
     let mut test_input_dat = get_test_input();
     test_input_dat = transpose(&test_input_dat);
-    gamma_epsilon(test_input_dat, "Test");
+    gamma_epsilon(&test_input_dat, "Test");
 
     let mut input_dat = get_input();
     input_dat = transpose(&input_dat);
-    gamma_epsilon(input_dat, "Actual");
+    gamma_epsilon(&input_dat, "Actual");
 }
 
-fn gamma_epsilon(diagnostics: Vec<Vec<u8>>, label: &str) {
+fn gamma_epsilon(diagnostics: &Vec<Vec<u8>>, label: &str) {
     let (_gamma, _epsilon) = bit_counts(&diagnostics);
 
     let gamma = usize::from_str_radix(
