@@ -69,9 +69,12 @@ fn bit_counts(input: &Vec<Vec<u8>>) -> (Vec<u8>, Vec<u8>) {
         if count_0 > count_1 {
             gamma.push(0);
             epsilon.push(1);
-        } else {
+        } else if count_0 < count_1 {
             gamma.push(1);
             epsilon.push(0);
+        } else {
+            gamma.push(2);
+            epsilon.push(2);
         }
     }
     (gamma, epsilon)
