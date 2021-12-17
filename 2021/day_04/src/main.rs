@@ -1,27 +1,57 @@
 fn main() {
     println!("Advent of Code - Day 4!");
 
-    let (draw_nums, mut boards) = get_input("input.dat");
+    // let input: &str = "test_input.dat";
+    let input: &str = "input.dat";
 
-    for n in draw_nums {
-        let bingo: i32 = mark_boards(&mut boards, n);
-        if bingo > 0 {
-            println!("BINGO! Score {}", n * bingo);
-            break;
+    // Part 1
+    let (draw_nums, mut boards) = get_input(&input);
+    let first_only: bool = true;
+
+    'first_draws: for n in draw_nums {
+        let winners = mark_boards(&mut boards, n, first_only);
+        let mut i: usize = 0;
+        for w in winners {
+            if boards.len() == 1  || first_only {
+                println!("First BINGO! Score {}\n{:?}\n\n", n * w.1, boards[w.0].numbers);
+                break 'first_draws;
+            }
+            boards.remove(w.0 - i);
+            i += 1;
+        }
+    }
+
+    // Part 2
+    let (draw_nums, mut boards) = get_input(&input);
+    let first_only: bool = false;
+
+    'last_draws: for n in draw_nums {
+        let winners = mark_boards(&mut boards, n, first_only);
+        let mut i: usize = 0;
+        for w in winners {
+            if boards.len() == 1  || first_only {
+                println!("Last BINGO! Score {}\n{:?}\n\n", n * w.1, boards[w.0].numbers);
+                break 'last_draws;
+            }
+            boards.remove(w.0 - i);
+            i += 1;
         }
     }
 }
 
-fn mark_boards(boards: &mut Vec<Board>, n: i32) -> i32 {
-    let mut bingo: i32 = 0;
-    for b in boards {
+fn mark_boards(boards: &mut Vec<Board>, n: i32, first_only: bool) -> Vec<(usize, i32)> {
+    let mut bingo: i32;
+    let mut winners: Vec<(usize, i32)> = Vec::new();
+    for (i, b) in boards.iter_mut().enumerate() {
         bingo = b.mark(n);
         if bingo > 0 {
-            println!("BINGO! Board {:?}\n\nSum {}", b.numbers, bingo);
-            break;
+            winners.push((i, bingo));
+            if first_only {
+                break;
+            }
         }
     }
-    bingo
+    winners
 }
 
 fn get_input(in_file: &str) -> (Vec<i32>, Vec<Board>) {
