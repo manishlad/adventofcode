@@ -18,7 +18,18 @@ fn main() {
             h_pos = i;
         }
     }
-    println!("Aligned to horizontal position {} with total fuel used {}", h_pos, fuel_used);
+    println!("Part 1: Aligned to horizontal position {} with total fuel used {}", h_pos, fuel_used);
+
+    let mut h_pos: u64 = input[0];
+    let mut fuel_used: u64 = u64::MAX;
+    for i in 0..=highest {
+        let total: u64 = input.iter().fold(0, |acum, p| acum + (1..=p.abs_diff(i)).fold(0, |acum2, step| acum2 + step));
+        if total < fuel_used {
+            fuel_used = total;
+            h_pos = i;
+        }
+    }
+    println!("Part 2: Aligned to horizontal position {} with total fuel used {}", h_pos, fuel_used);
 }
 
 fn get_input(in_file: &str) -> Vec<u64> {
