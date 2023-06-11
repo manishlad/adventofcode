@@ -1,4 +1,5 @@
 import sys
+from functools import reduce
 
 
 def get_calorie_list(calorie_list_file):
@@ -15,6 +16,11 @@ def main(calorie_list_file):
     calories_carried = get_calorie_list(calorie_list_file)
     highest = max(list(map(sum, calories_carried)))
     print("Part 1:", highest)
+
+    ordered_calories = list(map(sum, calories_carried))
+    ordered_calories.sort(reverse = True)
+    top_three = reduce(lambda a, b: a + b, ordered_calories[:3])
+    print("Part 2:", top_three)
 
 
 if __name__ == '__main__':
