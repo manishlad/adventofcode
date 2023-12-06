@@ -90,6 +90,18 @@ def main():
     margins = find_margins2(races)
     print("Part 2:", margins)
 
+    # The original functions would have worked fine
+    # I created the alternative functions because I missed the fact that
+    # I was converting the zip object into a list instead of iterating
+    # directly over the zip
+    if TEST:
+        races = parse_input_kerned(TEST_INPUT)
+    else:
+        races = parse_input_kerned(PUZZLE_INPUT)
+    margins = find_margins(races)
+    margins_product = reduce(lambda x, y: x * y, margins)
+    print("Part 2:", margins_product)
+
 
 if __name__ == "__main__":
     sys.exit(main())
